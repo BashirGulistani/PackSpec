@@ -2,3 +2,23 @@
 requires = ["setuptools>=68", "wheel"]
 build-backend = "setuptools.build_meta"
 
+[project]
+name = "packspec"
+version = "0.1.0"
+description = "Normalize messy supplier packaging specs (case pack, dims, weight, packaging type) into a clean schema."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "PackSpec Contributors" }]
+keywords = ["packaging", "normalization", "supplier-feed", "etl", "shipping", "units", "data-quality"]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: OS Independent"
+]
+
+[project.scripts]
+packspec = "packspec.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
