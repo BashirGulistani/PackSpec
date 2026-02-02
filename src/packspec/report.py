@@ -59,6 +59,19 @@ def normalize_csv(input_csv: str, text_col: str, out_csv: str) -> dict:
 
 
 
+def write_html_report(path: str, summary: dict) -> None:
+    p = Path(path)
+    p.parent.mkdir(parents=True, exist_ok=True)
+
+    def h(x: Any) -> str:
+        return html.escape("" if x is None else str(x))
+
+    html_text = f"""<!doctype html>
+<html>
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>PackSpec Report</title>
 
 
 
