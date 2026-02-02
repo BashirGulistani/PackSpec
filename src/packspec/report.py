@@ -73,7 +73,32 @@ def write_html_report(path: str, summary: dict) -> None:
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>PackSpec Report</title>
 
+<style>
+  body{{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;margin:24px;background:#0b0b0b;color:#eee}}
+  .card{{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:14px;margin:12px 0}}
+  h1{{margin:0 0 6px;font-size:22px}}
+  .muted{{color:#b9b9b9;font-size:13px}}
+  .grid{{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}}
+  @media(max-width:900px){{.grid{{grid-template-columns:1fr}}}}
+  .pill{{display:inline-block;padding:4px 8px;border-radius:999px;border:1px solid rgba(255,255,255,.16);font-size:12px;color:#ddd}}
+</style>
+</head>
+<body>
+<h1>PackSpec</h1>
+<div class="muted">Packaging normalization run summary</div>
 
+<div class="card">
+  <div class="grid">
+    <div><span class="pill">rows</span><div>{h(summary.get("rows"))}</div></div>
+    <div><span class="pill">avg confidence</span><div>{h(summary.get("avg_confidence"))}</div></div>
+    <div><span class="pill">high confidence</span><div>{h(summary.get("high_confidence"))}</div></div>
+    <div><span class="pill">low confidence</span><div>{h(summary.get("low_confidence"))}</div></div>
+  </div>
+</div>
+
+</body></html>
+"""
+    p.write_text(html_text, encoding="utf-8")
 
 
 
