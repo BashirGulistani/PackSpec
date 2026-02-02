@@ -10,4 +10,29 @@ from .units import Dim, Weight
 
 
 
+def _clean(s: str) -> str:
+    return (s or "").strip()
+
+
+def _unit_dim(u: str) -> str:
+    u = u.lower().strip()
+    if u in {"in", "inch", "inches", '"'}:
+        return "in"
+    if u in {"cm", "centimeter", "centimeters"}:
+        return "cm"
+    return "in"
+
+
+def _unit_w(u: str) -> str:
+    u = u.lower().strip()
+    if u in {"lb", "lbs", "pound", "pounds"}:
+        return "lb"
+    if u in {"kg", "kgs", "kilogram", "kilograms"}:
+        return "kg"
+    return "lb"
+
+
+
+
+
 
