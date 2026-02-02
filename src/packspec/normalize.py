@@ -7,9 +7,6 @@ from .patterns import CASE_PACK_RE, INNER_PACK_RE, WEIGHT_RE, DIMS_RE, PACKAGING
 from .units import Dim, Weight
 
 
-
-
-
 def _clean(s: str) -> str:
     return (s or "").strip()
 
@@ -30,6 +27,27 @@ def _unit_w(u: str) -> str:
     if u in {"kg", "kgs", "kilogram", "kilograms"}:
         return "kg"
     return "lb"
+
+
+@dataclass
+class NormalizedPackaging:
+    case_pack_qty: Optional[int] = None
+    inner_pack_qty: Optional[int] = None
+    case_dims: Optional[Dim] = None
+    case_weight: Optional[Weight] = None
+    packaging_type: Optional[str] = None
+    confidence: float = 0.0
+    notes: List[str] = None
+
+    def to_dict(self) -> Dict[str, Any]:
+        d = asdict(self)
+        if self.case_dims:
+            d["case_dims"] = {"l": self.case_dims.l, "w": self.case_dims.w, "h": self.case_dims.h, "unit": self.case_dims.unit}
+        if self.case_weight:
+            d["case_weight"] = {"value": self.case_weight.value, "unit": self.case_weight.unit}
+        if d.get("notes") is None:
+            d["notes"] = []
+        return d
 
 
 
