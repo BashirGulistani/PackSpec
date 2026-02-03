@@ -14,3 +14,13 @@ class TestNormalize(unittest.TestCase):
         self.assertEqual(out.case_weight.unit, "lb")
         self.assertGreater(out.confidence, 0.6)
 
+    def test_polybag(self):
+        s = "Packaging: Polybag. Inner Pack: 6. Case Pack: 72."
+        out = normalize_packaging(s)
+        self.assertEqual(out.inner_pack_qty, 6)
+        self.assertEqual(out.case_pack_qty, 72)
+        self.assertEqual(out.packaging_type, "polybag")
+
+
+if __name__ == "__main__":
+    unittest.main()
