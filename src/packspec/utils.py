@@ -27,7 +27,28 @@ def safe_int(s: str) -> Optional[int]:
     except Exception:
         return None
 
+def safe_float(s: str) -> Optional[float]:
+    if s is None:
+        return None
+    s = str(s).strip()
+    if not s:
+        return None
+    s = s.replace(",", "")
+    s = re.sub(r"[^0-9\.\-+eE]", "", s)
+    if not s:
+        return None
+    try:
+        return float(s)
+    except Exception:
+        return None
 
+
+def clamp01(x: float) -> float:
+    if x < 0:
+        return 0.0
+    if x > 1:
+        return 1.0
+    return float(x)
 
 
 
