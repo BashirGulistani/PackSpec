@@ -63,7 +63,14 @@ def load_rulepacks(path: str) -> list[RulePack]:
 
 
 
-
+def pick_rulepack(rulepacks: list[RulePack], supplier: Optional[str]) -> Optional[RulePack]:
+    if not supplier:
+        return None
+    s = supplier.strip().lower()
+    for rp in rulepacks:
+        if rp.supplier and rp.supplier.strip().lower() == s:
+            return rp
+    return None
 
 
 
