@@ -51,6 +51,17 @@ def load_rulepacks(path: str) -> list[RulePack]:
             RulePack(
                 name=str(item.get("name", "unnamed")),
                 supplier=item.get("supplier"),
+                preprocess=item.get("preprocess", []) or [],
+                case_pack_regex=item.get("case_pack_regex"),
+                inner_pack_regex=item.get("inner_pack_regex"),
+                dims_regex=item.get("dims_regex"),
+                weight_regex=item.get("weight_regex"),
+                packaging_type=item.get("packaging_type"),
+            )
+        )
+    return packs
+
+
 
 
 
