@@ -18,6 +18,13 @@ def validate_and_score(r: PackSpecResult) -> PackSpecResult:
 
 
 
+    if r.inner_pack_qty is not None:
+        if r.inner_pack_qty <= 0:
+            notes.append("invalid_inner_pack_qty")
+            score -= 0.20
+        elif r.case_pack_qty and r.inner_pack_qty > r.case_pack_qty:
+            notes.append("inner_pack_gt_case_pack")
+            score -= 0.10
 
 
 
