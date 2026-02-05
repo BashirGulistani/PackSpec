@@ -12,5 +12,10 @@ def volume_cuin(dim: Dim) -> float:
 
 
 
+def volume_cc(dim: Dim) -> float:
+    d = normalize_dim(dim, to_unit="cm")
+    return float(d.l * d.w * d.h)
+
+
 
 
