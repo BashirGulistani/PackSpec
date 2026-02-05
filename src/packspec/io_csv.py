@@ -13,3 +13,10 @@ def read_csv(path: str) -> tuple[list[str], list[dict]]:
 
 
 
+def write_csv(path: str, fieldnames: list[str], rows: list[dict]) -> None:
+    Path(path).parent.mkdir(parents=True, exist_ok=True)
+    with open(path, "w", encoding="utf-8", newline="") as f:
+        w = csv.DictWriter(f, fieldnames=fieldnames, extrasaction="ignore")
+        w.writeheader()
+        for row in rows:
+            w.writerow(row)
