@@ -19,3 +19,23 @@ def _unit_dim(u: str) -> str:
     return "in"
 
 
+def _unit_w(u: str) -> str:
+    u = (u or "").lower().strip()
+    if u in {"lb", "lbs", "pound", "pounds"}:
+        return "lb"
+    if u in {"kg", "kgs", "kilogram", "kilograms"}:
+        return "kg"
+    return "lb"
+
+
+def normalize_packaging(
+    text: str,
+    *,
+    supplier: Optional[str] = None,
+    rulepack: RulePack | None = None,
+) -> PackSpecResult:
+    raw = text or ""
+    s = clean_text(raw)
+    notes: List[str] = []
+    score = 0.0
+
