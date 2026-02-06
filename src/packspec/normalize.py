@@ -10,3 +10,12 @@ from .rules import RulePack
 
 
 
+def _unit_dim(u: str) -> str:
+    u = (u or "").lower().strip()
+    if u in {"in", "inch", "inches", '"'}:
+        return "in"
+    if u in {"cm", "centimeter", "centimeters"}:
+        return "cm"
+    return "in"
+
+
