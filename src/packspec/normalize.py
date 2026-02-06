@@ -70,4 +70,13 @@ def normalize_packaging(
             r.case_pack_qty = qty
             score += 0.25
 
+    else:
+        m2 = re.search(r"\b([0-9]{1,5})\s*(?:pcs|pc|units?)\s*/\s*(?:ctn|carton|case)\b", s, re.IGNORECASE)
+        if m2:
+            qty = safe_int(m2.group(1))
+            if qty is not None:
+                r.case_pack_qty = qty
+                score += 0.20
+                notes.append("case_pack_inferred_from_units_per_carton")
+
 
