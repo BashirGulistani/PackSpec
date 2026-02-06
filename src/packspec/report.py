@@ -62,5 +62,43 @@ def normalize_csv_pipeline(
 
         out_rows.append(merged)
 
+    extra = [
+        "case_pack_qty","inner_pack_qty",
+        "case_dim_l","case_dim_w","case_dim_h","case_dim_unit",
+        "case_weight_value","case_weight_unit",
+        "packaging_type","confidence","notes","rule_applied",
+        "case_volume_cuin","case_volume_cc","dim_weight_lb","dim_weight_kg",
+    ]
+    fieldnames = cols[:]
+    for c in extra:
+        if c not in fieldnames:
+            fieldnames.append(c)
 
+    write_csv(out_csv, fieldnames, out_rows)
+
+    qa = build_review_queue(out_rows, cfg=qa_cfg or QAConfig())
+    outd = Path(out_dir)
+    outd.mkdir(parents=True, exist_ok=True)
+
+    review_path = str(outd / "review_queue.csv")
+    sample_path = str(outd / "sample.csv")
+    write_csv(review_path, fieldnames, qa["low_conf_rows"])
+    write_csv(sample_path, fieldnames, qa["sample_rows"])
+
+    confs = [float(r.get("confidence") or 0) for r in out_rows]
+    avg = sum(confs) / len(confs) if confs else 0.0
+    high = sum(1 for c in confs if c >= 0.7)
+    low = sum(1 for c in confs if c <= (qa_cfg.low_conf_threshold if qa_cfg else 0.45))
+
+    return {
+        "rows": len(out_rows),
+        "avg_confidence": round(avg, 3),
+        "high_confidence": high,
+        "low_confidence": low,
+        "review_queue_count": qa["low_conf_count"],
+        "sample_count": qa["sample_count"],
+        "out_csv": out_csv,
+        "review_queue_csv": review_path,
+        "sample_csv": sample_path,
+    }
 
