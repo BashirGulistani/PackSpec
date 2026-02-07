@@ -137,5 +137,71 @@ def write_interactive_qa_html(
     font-size: 13px;
   }}
 
+  .btn:active {{ transform: translateY(1px); }}
+  table {{
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 12px;
+    font-size: 13px;
+  }}
+  th, td {{
+    border-bottom: 1px solid rgba(255,255,255,.08);
+    padding: 10px;
+    vertical-align: top;
+  }}
+  th {{
+    text-align:left;
+    color: #ddd;
+    cursor: pointer;
+    position: sticky;
+    top: 0;
+    background: rgba(11,11,11,.92);
+    backdrop-filter: blur(6px);
+    z-index: 2;
+  }}
+  code {{
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 12px;
+  }}
+  details {{
+    background: rgba(255,255,255,.03);
+    border: 1px solid rgba(255,255,255,.10);
+    border-radius: 12px;
+    padding: 10px 12px;
+  }}
+  summary {{
+    cursor:pointer;
+    color: #ddd;
+    font-weight: 600;
+  }}
+  .mono {{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; }}
+  .small {{ font-size: 12px; color: var(--muted); }}
+  .kvs {{
+    display:grid;
+    grid-template-columns: 140px 1fr;
+    gap: 6px 12px;
+    margin-top: 8px;
+  }}
+  .kvs div:nth-child(odd) {{ color: var(--muted); }}
+  .warn {{
+    border: 1px solid rgba(255, 193, 7, .25);
+    background: rgba(255, 193, 7, .06);
+  }}
+</style>
+</head>
+<body>
+  <div class="top">
+    <div>
+      <h1>{_h(title)}</h1>
+      <div class="muted">Interactive QA table for parsed packaging specs (search, sort, filter, drill-down).</div>
+    </div>
+    <div class="row">
+      <span class="chip" id="statRows">rows: 0</span>
+      <span class="chip" id="statLow">low-confidence: 0</span>
+      <span class="chip" id="statAvg">avg: 0.000</span>
+    </div>
+  </div>
+
+
 
 
