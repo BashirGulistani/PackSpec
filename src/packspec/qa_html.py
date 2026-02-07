@@ -324,6 +324,62 @@ def write_interactive_qa_html(
     return String(va).localeCompare(String(vb)) * dir;
   }}
 
+  function buildDetails(r) {{
+    const raw = (r.raw || "").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    const notes = (r.notes || "").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    const rule = (r.rule_applied || "");
+    return `
+      <details class="${{r.confidence < parseFloat(elThr.value) ? "warn" : ""}}">
+        <summary>view</summary>
+        <div class="kvs">
+          <div>confidence</div><div><code>${{r.confidence.toFixed(3)}}</code></div>
+          <div>supplier</div><div>${{r.supplier || ""}}</div>
+          <div>rule</div><div><code>${{rule}}</code></div>
+          <div>notes</div><div><code>${{notes}}</code></div>
+          <div>raw</div><div><code style="white-space:pre-wrap;">${{raw}}</code></div>
+        </div>
+      </details>
+    `;
+  }}
+
+  function render() {{
+    const q = (elQ.value || "").trim().toLowerCase();
+    const thr = parseFloat(elThr.value);
+
+    const filtered = DATA.filter(r => passes(r, q, thr));
+    filtered.sort(compare);
+
+    const lowCount = filtered.filter(r => r.confidence < thr).length;
+    const avg = filtered.length ? (filtered.reduce((s,r)=>s+r.confidence,0)/filtered.length) : 0;
+
+    statRows.textContent = `rows: ${{filtered.length}}`;
+    statLow.textContent = `low-confidence: ${{lowCount}}`;
+    statAvg.textContent = `avg: ${{avg.toFixed(3)}}`;
+
+    tbody.innerHTML = "";
+    const frag = document.createDocumentFragment();
+
+    for (const r of filtered) {{
+      const tr = document.createElement("tr");
+      const dims = dimsToString(r.dims);
+      const wt = weightToString(r);
+
+      tr.innerHTML = `
+        <td><code>${{r.confidence.toFixed(3)}}</code></td>
+        <td>${{r.supplier || ""}}</td>
+        <td><code>${{r.case_pack_qty ?? ""}}</code><span class="small">${{r.inner_pack_qty ? " (inner "+r.inner_pack_qty+")" : ""}}</span></td>
+        <td><code>${{dims}}</code></td>
+        <td><code>${{wt}}</code></td>
+        <td><code>${{r.packaging_type || ""}}</code></td>
+        <td>${{buildDetails(r)}}</td>
+      `;
+      frag.appendChild(tr);
+    }}
+    tbody.appendChild(frag);
+
+    window.__PACKSPEC_FILTERED__ = filtered;
+  }}
+
 
 
 
