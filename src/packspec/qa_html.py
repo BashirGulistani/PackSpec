@@ -203,5 +203,36 @@ def write_interactive_qa_html(
   </div>
 
 
+  <div class="card controls">
+    <div>
+      <label>Search (supplier, raw text, notes, rule)</label>
+      <input id="q" type="text" placeholder="e.g. carton 24, polybag, ACME..." />
+    </div>
+
+    <div>
+      <label>Confidence threshold: <span class="mono" id="thrVal">{default_low_threshold:.2f}</span></label>
+      <input id="thr" type="range" min="0" max="1" step="0.01" value="{default_low_threshold:.2f}" />
+      <div class="small">Rows below this are considered “low confidence”.</div>
+    </div>
+
+    <div>
+      <label>Mode</label>
+      <div class="row">
+        <button class="btn" id="toggleLow">Show: All</button>
+        <button class="btn" id="reset">Reset</button>
+      </div>
+      <div class="small">Toggle “Only low confidence”.</div>
+    </div>
+
+    <div>
+      <label>Export</label>
+      <div class="row">
+        <button class="btn" id="copyJSON">Copy filtered JSON</button>
+      </div>
+      <div class="small">Copies current filtered rows to clipboard.</div>
+    </div>
+  </div>
+
+
 
 
