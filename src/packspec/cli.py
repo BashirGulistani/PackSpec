@@ -50,6 +50,17 @@ def main() -> None:
         return
 
 
+    if args.cmd == "one":
+        packs = load_rulepacks(args.rules) if args.rules else []
+        rp = pick_rulepack(packs, args.supplier)
+
+        r = normalize_packaging(args.text, supplier=args.supplier, rulepack=rp)
+        r = enrich(r)
+        r = validate_and_score(r)
+        print(json.dumps(r.to_dict(), indent=2))
+        return
+
+
 
 
 
