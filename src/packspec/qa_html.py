@@ -60,4 +60,82 @@ def write_interactive_qa_html(
 
 
 
+    html_text = f"""<!doctype html>
+<html>
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>{_h(title)}</title>
+<style>
+  :root {{
+    --bg: #0b0b0b;
+    --panel: rgba(255,255,255,.06);
+    --border: rgba(255,255,255,.12);
+    --muted: #b9b9b9;
+    --text: #eee;
+    --chip: rgba(255,255,255,.08);
+  }}
+  body {{
+    font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial;
+    margin: 22px;
+    background: var(--bg);
+    color: var(--text);
+  }}
+  .top {{
+    display:flex; gap:12px; align-items:flex-end; justify-content:space-between;
+    flex-wrap:wrap;
+    margin-bottom: 14px;
+  }}
+  h1 {{ margin:0; font-size: 20px; }}
+  .muted {{ color: var(--muted); font-size: 13px; }}
+  .card {{
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 12px;
+  }}
+  .controls {{
+    display:grid;
+    grid-template-columns: 1.4fr 1fr 1fr 1fr;
+    gap: 10px;
+    align-items:end;
+  }}
+  @media(max-width: 900px) {{
+    .controls {{ grid-template-columns: 1fr; }}
+  }}
+  label {{ font-size: 12px; color: var(--muted); display:block; margin-bottom: 6px; }}
+  input[type="text"] {{
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: rgba(255,255,255,.03);
+    color: var(--text);
+    outline: none;
+  }}
+  input[type="range"] {{ width: 100%; }}
+  .row {{
+    display:flex; gap:10px; align-items:center; justify-content:space-between;
+  }}
+  .chip {{
+    display:inline-block;
+    padding: 4px 8px;
+    border-radius: 999px;
+    background: var(--chip);
+    border: 1px solid var(--border);
+    font-size: 12px;
+    color: #ddd;
+  }}
+  .btn {{
+    cursor:pointer;
+    user-select:none;
+    padding: 9px 11px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: rgba(255,255,255,.04);
+    color: var(--text);
+    font-size: 13px;
+  }}
+
+
 
