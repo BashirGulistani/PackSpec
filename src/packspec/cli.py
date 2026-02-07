@@ -60,7 +60,24 @@ def main() -> None:
         print(json.dumps(r.to_dict(), indent=2))
         return
 
+    if args.cmd == "csv":
+        qa = QAConfig(low_conf_threshold=float(args.low_conf), sample_size=int(args.sample))
+        summary = normalize_csv_pipeline(
+            args.inp,
+            text_col=args.col,
+            supplier_col=args.supplier_col,
+            rules_path=args.rules,
+            out_csv=args.out_csv,
+            out_dir=args.out_dir,
+            qa_cfg=qa,
+        )
+        outd = Path(args.out_dir)
+        outd.mkdir(parents=True, exist_ok=True)
+        (outd / "summary.json").write_text(json.dumps(summary, indent=2) + "\n", encoding="utf-8")
 
+        print("Done.")
+        print(json.dumps(summary, indent=2))
+        return
 
 
 
