@@ -303,4 +303,27 @@ def write_interactive_qa_html(
   }}
 
 
+  function compare(a, b) {{
+    const dir = sortDir === "asc" ? 1 : -1;
+
+    const getVal = (r) => {{
+      if (sortKey === "dims") return dimsToString(r.dims);
+      if (sortKey === "case_weight") return weightToString(r);
+      if (sortKey === "detail") return (r.raw || "");
+      const v = r[sortKey];
+      return v == null ? "" : v;
+    }};
+
+    const va = getVal(a);
+    const vb = getVal(b);
+
+    if (sortKey === "confidence") {{
+      return (va - vb) * dir;
+    }}
+
+    return String(va).localeCompare(String(vb)) * dir;
+  }}
+
+
+
 
