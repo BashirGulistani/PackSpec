@@ -251,3 +251,56 @@ def write_interactive_qa_html(
 
 
 
+
+
+<script>
+  const DATA = {payload_json};
+
+  const elQ = document.getElementById("q");
+  const elThr = document.getElementById("thr");
+  const elThrVal = document.getElementById("thrVal");
+  const elToggleLow = document.getElementById("toggleLow");
+  const elReset = document.getElementById("reset");
+  const elCopy = document.getElementById("copyJSON");
+
+  const statRows = document.getElementById("statRows");
+  const statLow = document.getElementById("statLow");
+  const statAvg = document.getElementById("statAvg");
+
+  const tbody = document.querySelector("#tbl tbody");
+  const headers = Array.from(document.querySelectorAll("th[data-key]"));
+
+  let onlyLow = false;
+  let sortKey = "confidence";
+  let sortDir = "desc"; // asc/desc
+
+  function dimsToString(d) {{
+    if (!d) return "";
+    const {{l,w,h,u}} = d;
+    if (l==null || w==null || h==null) return "";
+    return `${{l}}x${{w}}x${{h}} ${{u||""}}`.trim();
+  }}
+
+  function weightToString(r) {{
+    if (r.case_weight_value == null) return "";
+    return `${{r.case_weight_value}} ${{r.case_weight_unit||""}}`.trim();
+  }}
+
+  function haystack(r) {{
+    return [
+      r.supplier || "",
+      r.raw || "",
+      r.notes || "",
+      r.rule_applied || "",
+      r.packaging_type || ""
+    ].join(" ").toLowerCase();
+  }}
+
+  function passes(r, q, thr) {{
+    if (onlyLow && !(r.confidence < thr)) return false;
+    if (!q) return true;
+    return haystack(r).includes(q);
+  }}
+
+
+
