@@ -234,5 +234,20 @@ def write_interactive_qa_html(
   </div>
 
 
+  <table id="tbl">
+    <thead>
+      <tr>
+        <th data-key="confidence">confidence</th>
+        <th data-key="supplier">supplier</th>
+        <th data-key="case_pack_qty">case pack</th>
+        <th data-key="dims">dims</th>
+        <th data-key="case_weight">weight</th>
+        <th data-key="packaging_type">packaging</th>
+        <th data-key="detail">details</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
 
 
