@@ -29,6 +29,25 @@ def main() -> None:
     p_one.add_argument("--rules", default=None, help="Path to rulepacks.yml/json (optional)")
 
 
+    p_csv = sub.add_parser("csv", help="Normalize a CSV column containing packaging text (pipeline mode)")
+    p_csv.add_argument("--in", dest="inp", required=True, help="Input CSV")
+    p_csv.add_argument("--col", required=True, help="Column name containing packaging text")
+    p_csv.add_argument("--supplier-col", default=None, help="Column name containing supplier (optional)")
+    p_csv.add_argument("--rules", default=None, help="Path to rulepacks.yml/json (optional)")
+    p_csv.add_argument("--out", dest="out_csv", required=True, help="Output CSV")
+    p_csv.add_argument("--out-dir", default=".packspec-out", help="Output dir for QA outputs")
+    p_csv.add_argument("--low-conf", type=float, default=0.45, help="Low confidence threshold (default 0.45)")
+    p_csv.add_argument("--sample", type=int, default=50, help="Sample size for QA (default 50)")
+
+    p_rules = sub.add_parser("rules", help="List loaded rulepacks")
+    p_rules.add_argument("--rules", required=True, help="Path to rulepacks.yml/json")
+
+    args = ap.parse_args()
+
+    if args.cmd == "rules":
+        packs = load_rulepacks(args.rules)
+        print(json.dumps([{"name": p.name, "supplier": p.supplier} for p in packs], indent=2))
+        return
 
 
 
