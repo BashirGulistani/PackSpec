@@ -382,4 +382,57 @@ def write_interactive_qa_html(
 
 
 
+  headers.forEach(th => {{
+    th.addEventListener("click", () => {{
+      const key = th.dataset.key;
+      if (!key) return;
+      if (sortKey === key) {{
+        sortDir = (sortDir === "asc") ? "desc" : "asc";
+      }} else {{
+        sortKey = key;
+        sortDir = (key === "confidence") ? "desc" : "asc";
+      }}
+      render();
+    }});
+  }});
 
+  elThr.addEventListener("input", () => {{
+    elThrVal.textContent = parseFloat(elThr.value).toFixed(2);
+    render();
+  }});
+  elQ.addEventListener("input", () => render());
+
+  elToggleLow.addEventListener("click", () => {{
+    onlyLow = !onlyLow;
+    elToggleLow.textContent = onlyLow ? "Show: Only low" : "Show: All";
+    render();
+  }});
+
+  elReset.addEventListener("click", () => {{
+    elQ.value = "";
+    elThr.value = "{default_low_threshold:.2f}";
+    elThrVal.textContent = parseFloat(elThr.value).toFixed(2);
+    onlyLow = false;
+    elToggleLow.textContent = "Show: All";
+    sortKey = "confidence";
+    sortDir = "desc";
+    render();
+  }});
+
+  elCopy.addEventListener("click", async () => {{
+    const data = window.__PACKSPEC_FILTERED__ || [];
+    try {{
+      await navigator.clipboard.writeText(JSON.stringify(data, null, 2));
+      elCopy.textContent = "Copied!";
+      setTimeout(()=> elCopy.textContent = "Copy filtered JSON", 900);
+    }} catch (e) {{
+      alert("Clipboard copy failed (browser permissions).");
+    }}
+  }});
+
+  render();
+</script>
+</body>
+</html>
+"""
+    p.write_text(html_text, encoding="utf-8")
