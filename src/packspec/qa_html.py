@@ -493,6 +493,56 @@ def write_interactive_qa_html(
     }}
     return String(va).localeCompare(String(vb)) * dir;
   }}
+  function escapeHtml(s) {{
+    return (s||"")
+      .replace(/&/g,"&amp;")
+      .replace(/</g,"&lt;")
+      .replace(/>/g,"&gt;")
+      .replace(/"/g,"&quot;")
+      .replace(/'/g,"&#039;");
+  }}
+
+  function parseJsRegex(inputStr) {{
+    const s = (inputStr||"").trim();
+    if (!s) return null;
+
+    if (s.startsWith("/") && s.lastIndexOf("/") > 0) {{
+      const last = s.lastIndexOf("/");
+      const pat = s.slice(1, last);
+      const flags = s.slice(last+1) || "";
+      try {{
+        return new RegExp(pat, flags);
+      }} catch(e) {{
+        return null;
+      }}
+    }}
+    try {{
+      return new RegExp(s, "i");
+    }} catch(e) {{
+      return null;
+    }}
+  }}
+
+  function collectMatches(text, rx, cls, label) {{
+    if (!rx) return [];
+    const out = [];
+
+    const flags = rx.flags.includes("g") ? rx.flags : (rx.flags + "g");
+    const rg = new RegExp(rx.source, flags);
+
+    let m;
+    while ((m = rg.exec(text)) !== null) {{
+      if (m.index === undefined) break;
+      const start = m.index;
+      const end = start + (m[0] ? m[0].length : 0);
+      if (end > start) {{
+        out.push({{start, end, cls, label, value: m[0]}});
+      }}
+      if (m[0] === "") rg.lastIndex++;
+    }}
+    return out;
+  }}
+
 
 
 
