@@ -64,6 +64,57 @@ def write_interactive_qa_html(
         }
 
 
+    payload = [pick(r) for r in data]
+    payload_json = json.dumps(payload)
+
+    default_case_pack = _pyre_to_js_literal(CASE_PACK_RE)
+    default_inner_pack = _pyre_to_js_literal(INNER_PACK_RE)
+    default_dims = _pyre_to_js_literal(DIMS_RE)
+    default_weight = _pyre_to_js_literal(WEIGHT_RE)
+
+    html_text = f"""<!doctype html>
+<html>
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>{_h(title)}</title>
+<style>
+  :root {{
+    --bg: #0b0b0b;
+    --panel: rgba(255,255,255,.06);
+    --border: rgba(255,255,255,.12);
+    --muted: #b9b9b9;
+    --text: #eee;
+    --chip: rgba(255,255,255,.08);
+
+    --hl-dims-bg: rgba(76, 175, 80, .18);
+    --hl-dims-br: rgba(76, 175, 80, .35);
+
+    --hl-weight-bg: rgba(33, 150, 243, .18);
+    --hl-weight-br: rgba(33, 150, 243, .35);
+
+    --hl-qty-bg: rgba(255, 193, 7, .16);
+    --hl-qty-br: rgba(255, 193, 7, .35);
+  }}
+  body {{
+    font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial;
+    margin: 22px;
+    background: var(--bg);
+    color: var(--text);
+  }}
+  .top {{
+    display:flex; gap:12px; align-items:flex-end; justify-content:space-between;
+    flex-wrap:wrap;
+    margin-bottom: 14px;
+  }}
+  h1 {{ margin:0; font-size: 20px; }}
+  .muted {{ color: var(--muted); font-size: 13px; }}
+  .card {{
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 12px;
+  }}
 
 
 
