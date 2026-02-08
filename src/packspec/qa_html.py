@@ -890,7 +890,34 @@ def write_interactive_qa_html(
     renderLiveHighlight();
   }});
 
+  elRbTest.addEventListener("click", () => testRegexes());
 
+  elRbCopyJSON.addEventListener("click", async () => {{
+    const raw = buildRulepackSnippetObj();
+    const snip = sanitizeSnippetForOutput(raw);
+    const doc = {{ rulepacks: [snip] }};
+    await copyText(JSON.stringify(doc, null, 2), elRbCopyJSON);
+  }});
+
+  elRbCopyYAML.addEventListener("click", async () => {{
+    const raw = buildRulepackSnippetObj();
+    const snip = sanitizeSnippetForOutput(raw);
+    if (!snip.name) snip.name = "supplier-packaging-overrides";
+    if (!snip.preprocess) snip.preprocess = [];
+    const y = toYaml(snip);
+    await copyText(y, elRbCopyYAML);
+  }});
+
+  populateRowSelector();
+  seedBuilderDefaults();
+  render();
+  renderLiveHighlight();
+  testRegexes();
+</script>
+</body>
+</html>
+"""
+    p.write_text(html_text, encoding="utf-8")
 
 
 
