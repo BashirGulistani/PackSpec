@@ -843,6 +843,53 @@ def write_interactive_qa_html(
       render();
     }});
   }});
+  elThr.addEventListener("input", () => {{
+    elThrVal.textContent = parseFloat(elThr.value).toFixed(2);
+    render();
+    renderLiveHighlight();
+  }});
+  elQ.addEventListener("input", () => render());
+
+  elToggleLow.addEventListener("click", () => {{
+    onlyLow = !onlyLow;
+    elToggleLow.textContent = onlyLow ? "Show: Only low" : "Show: All";
+    render();
+  }});
+
+  elReset.addEventListener("click", () => {{
+    elQ.value = "";
+    elThr.value = "{default_low_threshold:.2f}";
+    elThrVal.textContent = parseFloat(elThr.value).toFixed(2);
+    onlyLow = false;
+    elToggleLow.textContent = "Show: All";
+    sortKey = "confidence";
+    sortDir = "desc";
+    render();
+    renderLiveHighlight();
+  }});
+
+  elCopy.addEventListener("click", async () => {{
+    const data = window.__PACKSPEC_FILTERED__ || [];
+    await copyText(JSON.stringify(data, null, 2), elCopy);
+  }});
+
+  elExportLowCSV.addEventListener("click", () => {{
+    exportLowConfidenceCSV();
+  }});
+
+  [elRxCasePack, elRxInnerPack, elRxDims, elRxWeight].forEach(el => {{
+    el.addEventListener("input", () => {{
+      renderLiveHighlight();
+    }});
+  }});
+
+  elSelectedRow.addEventListener("change", () => {{
+    const idx = parseInt(elSelectedRow.value || "0", 10);
+    const r = DATA[idx] || {{}};
+    if (!elRbSupplier.value.trim() && r.supplier) elRbSupplier.value = String(r.supplier);
+    renderLiveHighlight();
+  }});
+
 
 
 
