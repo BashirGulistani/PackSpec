@@ -597,6 +597,74 @@ def write_interactive_qa_html(
 
     elLiveHighlight.innerHTML = mergeAndRenderHighlights(raw, spans);
   }}
+  function buildDetails(r) {{
+    const thr = parseFloat(elThr.value);
+    const rx = getBuilderRegexes();
+
+    const raw = (r.raw || "");
+    const spans = []
+      .concat(collectMatches(raw, rx.dims, "hl-dims", "dims match"))
+      .concat(collectMatches(raw, rx.weight, "hl-weight", "weight match"))
+      .concat(collectMatches(raw, rx.casePack, "hl-qty", "case pack match"))
+      .concat(collectMatches(raw, rx.innerPack, "hl-qty", "inner pack match"));
+
+    const rawHighlighted = mergeAndRenderHighlights(raw, spans);
+
+    const notes = escapeHtml(r.notes || "");
+    const rule = escapeHtml(r.rule_applied || "");
+
+    return `
+      <details class="${{r.confidence < thr ? "warn" : ""}}">
+        <summary>view</summary>
+        <div class="kvs">
+          <div>confidence</div><div><code>${{r.confidence.toFixed(3)}}</code></div>
+          <div>supplier</div><div>${{escapeHtml(r.supplier || "")}}</div>
+          <div>rule</div><div><code>${{rule}}</code></div>
+          <div>notes</div><div><code>${{notes}}</code></div>
+          <div>raw (highlighted)</div><div>${{rawHighlighted}}</div>
+        </div>
+      </details>
+    `;
+  }}
+
+  function render() {{
+    const q = (elQ.value || "").trim().toLowerCase();
+    const thr = parseFloat(elThr.value);
+
+    const filtered = DATA.filter(r => passes(r, q, thr));
+    filtered.sort(compare);
+
+    const lowCount = filtered.filter(r => r.confidence < thr).length;
+    const avg = filtered.length ? (filtered.reduce((s,r)=>s+r.confidence,0)/filtered.length) : 0;
+
+    statRows.textContent = `rows: ${{filtered.length}}`;
+    statLow.textContent = `low-confidence: ${{lowCount}}`;
+    statAvg.textContent = `avg: ${{avg.toFixed(3)}}`;
+
+    tbody.innerHTML = "";
+    const frag = document.createDocumentFragment();
+
+    for (const r of filtered) {{
+      const tr = document.createElement("tr");
+      const dims = dimsToString(r.dims);
+      const wt = weightToString(r);
+
+      tr.innerHTML = `
+        <td><code>${{r.confidence.toFixed(3)}}</code></td>
+        <td>${{escapeHtml(r.supplier || "")}}</td>
+        <td><code>${{r.case_pack_qty ?? ""}}</code><span class="small">${{r.inner_pack_qty ? " (inner "+r.inner_pack_qty+")" : ""}}</span></td>
+        <td><code>${{escapeHtml(dims)}}</code></td>
+        <td><code>${{escapeHtml(wt)}}</code></td>
+        <td><code>${{escapeHtml(r.packaging_type || "")}}</code></td>
+        <td>${{buildDetails(r)}}</td>
+      `;
+      frag.appendChild(tr);
+    }}
+    tbody.appendChild(frag);
+
+    window.__PACKSPEC_FILTERED__ = filtered;
+  }}
+
 
 
 
