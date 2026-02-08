@@ -664,6 +664,36 @@ def write_interactive_qa_html(
 
     window.__PACKSPEC_FILTERED__ = filtered;
   }}
+  function toCsvValue(v) {{
+    if (v === null || v === undefined) return "";
+    const s = String(v);
+    // CSV escaping
+    if (s.includes('"') || s.includes(",") || s.includes("\\n") || s.includes("\\r")) {{
+      return '"' + s.replace(/"/g, '""') + '"';
+    }}
+    return s;
+  }}
+
+  function exportLowConfidenceCSV() {{
+    const thr = parseFloat(elThr.value);
+    const low = DATA.filter(r => r.confidence < thr);
+
+    const header = [
+      "supplier",
+      "confidence",
+      "case_pack_qty",
+      "inner_pack_qty",
+      "dims",
+      "case_weight",
+      "packaging_type",
+      "rule_applied",
+      "notes",
+      "raw"
+    ];
+
+    const lines = [];
+    lines.push(header.join(","));
+
 
 
 
