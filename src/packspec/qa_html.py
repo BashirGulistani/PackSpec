@@ -542,6 +542,62 @@ def write_interactive_qa_html(
     }}
     return out;
   }}
+  function mergeAndRenderHighlights(text, spans) {{
+    const t = text || "";
+    if (!spans.length) return `<code style="white-space:pre-wrap;">${{escapeHtml(t)}}</code>`;
+    spans.sort((a,b) => (a.start - b.start) || ((b.end-b.start) - (a.end-a.start)));
+
+    const cleaned = [];
+    let lastEnd = -1;
+    for (const s of spans) {{
+      if (s.start >= lastEnd) {{
+        cleaned.push(s);
+        lastEnd = s.end;
+      }}
+    }}
+
+    let out = "";
+    let idx = 0;
+    for (const s of cleaned) {{
+      out += escapeHtml(t.slice(idx, s.start));
+      out += `<span class="hl ${{
+        s.cls
+      }}" title="${{
+        escapeHtml(s.label)
+      }}">${{
+        escapeHtml(t.slice(s.start, s.end))
+      }}</span>`;
+      idx = s.end;
+    }}
+    out += escapeHtml(t.slice(idx));
+    return `<code style="white-space:pre-wrap;">${{out}}</code>`;
+  }}
+
+  function getBuilderRegexes() {{
+    return {{
+      casePack: parseJsRegex(elRxCasePack.value),
+      innerPack: parseJsRegex(elRxInnerPack.value),
+      dims: parseJsRegex(elRxDims.value),
+      weight: parseJsRegex(elRxWeight.value),
+    }};
+  }}
+
+  function renderLiveHighlight() {{
+    const idx = parseInt(elSelectedRow.value || "0", 10);
+    const r = DATA[idx] || {{}};
+    const raw = (r.raw || "");
+
+    const rx = getBuilderRegexes();
+
+    const spans = []
+      .concat(collectMatches(raw, rx.dims, "hl-dims", "dims match"))
+      .concat(collectMatches(raw, rx.weight, "hl-weight", "weight match"))
+      .concat(collectMatches(raw, rx.casePack, "hl-qty", "case pack match"))
+      .concat(collectMatches(raw, rx.innerPack, "hl-qty", "inner pack match"));
+
+    elLiveHighlight.innerHTML = mergeAndRenderHighlights(raw, spans);
+  }}
+
 
 
 
