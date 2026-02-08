@@ -358,6 +358,142 @@ def write_interactive_qa_html(
         <div class="small">case_pack_regex</div>
         <input id="rxCasePack" type="text" />
       </div>
+      <div class="kvRow">
+        <div class="small">inner_pack_regex</div>
+        <input id="rxInnerPack" type="text" />
+      </div>
+
+      <div class="kvRow">
+        <div class="small">dims_regex</div>
+        <input id="rxDims" type="text" />
+      </div>
+
+      <div class="kvRow">
+        <div class="small">weight_regex</div>
+        <input id="rxWeight" type="text" />
+      </div>
+
+      <div class="row" style="margin-top:10px">
+        <button class="btn" id="rbTest">Test regexes</button>
+        <button class="btn" id="rbCopyYAML">Copy YAML snippet</button>
+        <button class="btn" id="rbCopyJSON">Copy JSON snippet</button>
+      </div>
+
+      <div style="height:10px"></div>
+
+      <div class="small">Test output</div>
+      <div class="outBox" style="margin-top:6px">
+        <pre class="mono" id="rbOut" style="margin:0; white-space:pre-wrap;"></pre>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="panelTitle">Highlighted Raw Text (dims / weight / qty)</div>
+      <div class="small">Uses your current regex builder values (not just defaults).</div>
+      <div style="height:10px"></div>
+      <div class="outBox">
+        <div id="liveHighlight" class="mono" style="white-space:pre-wrap;"></div>
+      </div>
+      <div style="height:10px"></div>
+      <div class="small">
+        Legend:
+        <span class="hl hl-dims">dims</span>
+        <span class="hl hl-weight">weight</span>
+        <span class="hl hl-qty">qty</span>
+      </div>
+    </div>
+  </div>
+
+<script>
+  const DATA = {payload_json};
+
+  const DEFAULT_RX = {{
+    casePack: {default_case_pack},
+    innerPack: {default_inner_pack},
+    dims: {default_dims},
+    weight: {default_weight},
+  }};
+
+  const elQ = document.getElementById("q");
+  const elThr = document.getElementById("thr");
+  const elThrVal = document.getElementById("thrVal");
+  const elToggleLow = document.getElementById("toggleLow");
+  const elReset = document.getElementById("reset");
+  const elCopy = document.getElementById("copyJSON");
+  const elExportLowCSV = document.getElementById("exportLowCSV");
+
+  const statRows = document.getElementById("statRows");
+  const statLow = document.getElementById("statLow");
+  const statAvg = document.getElementById("statAvg");
+
+  const tbody = document.querySelector("#tbl tbody");
+  const headers = Array.from(document.querySelectorAll("th[data-key]"));
+
+  const elSelectedRow = document.getElementById("selectedRow");
+  const elRbSupplier = document.getElementById("rbSupplier");
+  const elRbName = document.getElementById("rbName");
+  const elRxCasePack = document.getElementById("rxCasePack");
+  const elRxInnerPack = document.getElementById("rxInnerPack");
+  const elRxDims = document.getElementById("rxDims");
+  const elRxWeight = document.getElementById("rxWeight");
+  const elRbTest = document.getElementById("rbTest");
+  const elRbCopyYAML = document.getElementById("rbCopyYAML");
+  const elRbCopyJSON = document.getElementById("rbCopyJSON");
+  const elRbOut = document.getElementById("rbOut");
+  const elLiveHighlight = document.getElementById("liveHighlight");
+
+  let onlyLow = false;
+  let sortKey = "confidence";
+  let sortDir = "desc";
+
+  function dimsToString(d) {{
+    if (!d) return "";
+    const {{l,w,h,u}} = d;
+    if (l==null || w==null || h==null) return "";
+    return `${{l}}x${{w}}x${{h}} ${{u||""}}`.trim();
+  }}
+
+  function weightToString(r) {{
+    if (r.case_weight_value == null) return "";
+    return `${{r.case_weight_value}} ${{r.case_weight_unit||""}}`.trim();
+  }}
+
+  function haystack(r) {{
+    return [
+      r.supplier || "",
+      r.raw || "",
+      r.notes || "",
+      r.rule_applied || "",
+      r.packaging_type || ""
+    ].join(" ").toLowerCase();
+  }}
+
+  function passes(r, q, thr) {{
+    if (onlyLow && !(r.confidence < thr)) return false;
+    if (!q) return true;
+    return haystack(r).includes(q);
+  }}
+
+  function compare(a, b) {{
+    const dir = sortDir === "asc" ? 1 : -1;
+
+    const getVal = (r) => {{
+      if (sortKey === "dims") return dimsToString(r.dims);
+      if (sortKey === "case_weight") return weightToString(r);
+      if (sortKey === "detail") return (r.raw || "");
+      const v = r[sortKey];
+      return v == null ? "" : v;
+    }};
+
+    const va = getVal(a);
+    const vb = getVal(b);
+
+    if (sortKey === "confidence") {{
+      return (va - vb) * dir;
+    }}
+    return String(va).localeCompare(String(vb)) * dir;
+  }}
+
 
 
 
