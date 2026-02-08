@@ -115,6 +115,85 @@ def write_interactive_qa_html(
     border-radius: 14px;
     padding: 12px;
   }}
+  .controls {{
+    display:grid;
+    grid-template-columns: 1.4fr 1fr 1fr 1fr;
+    gap: 10px;
+    align-items:end;
+  }}
+  @media(max-width: 900px) {{
+    .controls {{ grid-template-columns: 1fr; }}
+  }}
+  label {{ font-size: 12px; color: var(--muted); display:block; margin-bottom: 6px; }}
+  input[type="text"], textarea {{
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: rgba(255,255,255,.03);
+    color: var(--text);
+    outline: none;
+  }}
+  textarea {{
+    min-height: 92px;
+    resize: vertical;
+  }}
+  input[type="range"] {{ width: 100%; }}
+  .row {{
+    display:flex; gap:10px; align-items:center; justify-content:space-between;
+  }}
+  .chip {{
+    display:inline-block;
+    padding: 4px 8px;
+    border-radius: 999px;
+    background: var(--chip);
+    border: 1px solid var(--border);
+    font-size: 12px;
+    color: #ddd;
+  }}
+  .btn {{
+    cursor:pointer;
+    user-select:none;
+    padding: 9px 11px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: rgba(255,255,255,.04);
+    color: var(--text);
+    font-size: 13px;
+    white-space: nowrap;
+  }}
+  .btn:active {{ transform: translateY(1px); }}
+  table {{
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 12px;
+    font-size: 13px;
+  }}
+  th, td {{
+    border-bottom: 1px solid rgba(255,255,255,.08);
+    padding: 10px;
+    vertical-align: top;
+  }}
+  th {{
+    text-align:left;
+    color: #ddd;
+    cursor: pointer;
+    position: sticky;
+    top: 0;
+    background: rgba(11,11,11,.92);
+    backdrop-filter: blur(6px);
+    z-index: 2;
+  }}
+  code {{
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 12px;
+  }}
+  details {{
+    background: rgba(255,255,255,.03);
+    border: 1px solid rgba(255,255,255,.10);
+    border-radius: 12px;
+    padding: 10px 12px;
+  }}
 
 
 
