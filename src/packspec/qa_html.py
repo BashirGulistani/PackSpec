@@ -298,6 +298,67 @@ def write_interactive_qa_html(
       <input id="thr" type="range" min="0" max="1" step="0.01" value="{default_low_threshold:.2f}" />
       <div class="small">Rows below this are considered “low confidence”.</div>
     </div>
+    <div>
+      <label>Mode</label>
+      <div class="row">
+        <button class="btn" id="toggleLow">Show: All</button>
+        <button class="btn" id="reset">Reset</button>
+      </div>
+      <div class="small">Toggle “Only low confidence”.</div>
+    </div>
+
+    <div>
+      <label>Export</label>
+      <div class="row">
+        <button class="btn" id="copyJSON">Copy filtered JSON</button>
+        <button class="btn" id="exportLowCSV">Export low-conf CSV</button>
+      </div>
+      <div class="small">CSV is generated in-browser from the current dataset.</div>
+    </div>
+  </div>
+
+  <table id="tbl">
+    <thead>
+      <tr>
+        <th data-key="confidence">confidence</th>
+        <th data-key="supplier">supplier</th>
+        <th data-key="case_pack_qty">case pack</th>
+        <th data-key="dims">dims</th>
+        <th data-key="case_weight">weight</th>
+        <th data-key="packaging_type">packaging</th>
+        <th data-key="detail">details</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <div class="panelGrid">
+    <div class="card">
+      <div class="panelTitle">Regex Builder (supplier rule authoring)</div>
+      <div class="small">Select a row, tweak regexes, and see what they match in the raw text. Copy rulepack snippet when ready.</div>
+
+      <div style="height:10px"></div>
+
+      <div class="kvRow">
+        <div class="small">Selected row</div>
+        <select class="select" id="selectedRow"></select>
+      </div>
+
+      <div class="kvRow">
+        <div class="small">Supplier (for rulepack)</div>
+        <input id="rbSupplier" type="text" placeholder="e.g. ACME Supplies" />
+      </div>
+
+      <div class="kvRow">
+        <div class="small">Rulepack name</div>
+        <input id="rbName" type="text" placeholder="e.g. acme-cleanup" />
+      </div>
+
+      <div class="kvRow">
+        <div class="small">case_pack_regex</div>
+        <input id="rxCasePack" type="text" />
+      </div>
+
 
 
 
