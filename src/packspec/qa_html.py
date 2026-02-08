@@ -746,6 +746,55 @@ def write_interactive_qa_html(
       elSelectedRow.appendChild(opt);
     }});
   }}
+  function testRegexes() {{
+    const idx = parseInt(elSelectedRow.value || "0", 10);
+    const r = DATA[idx] || {{}};
+    const raw = (r.raw || "");
+
+    const rx = getBuilderRegexes();
+
+    function testOne(name, reObj) {{
+      if (!reObj) return {{ ok:false, err:"invalid regex" }};
+      const m = raw.match(reObj);
+      if (!m) return {{ ok:true, match:null }};
+      return {{ ok:true, match:m[0], groups:m.slice(1) }};
+    }}
+
+    const out = {{
+      selected_index: idx,
+      supplier: r.supplier || null,
+      confidence: r.confidence,
+      matches: {{
+        case_pack_regex: testOne("case_pack", rx.casePack),
+        inner_pack_regex: testOne("inner_pack", rx.innerPack),
+        dims_regex: testOne("dims", rx.dims),
+        weight_regex: testOne("weight", rx.weight),
+      }},
+      notes: r.notes || null,
+      rule_applied: r.rule_applied || null
+    }};
+
+    elRbOut.textContent = JSON.stringify(out, null, 2);
+
+    renderLiveHighlight();
+  }}
+
+  function buildRulepackSnippetObj() {{
+    const supplier = (elRbSupplier.value || "").trim();
+    const name = (elRbName.value || "").trim() || "supplier-packaging-overrides";
+
+    const snip = {{
+      name,
+      supplier: supplier || None,
+      preprocess: [],
+      case_pack_regex: (elRxCasePack.value || "").trim() || None,
+      inner_pack_regex: (elRxInnerPack.value || "").trim() || None,
+      dims_regex: (elRxDims.value || "").trim() || None,
+      weight_regex: (elRxWeight.value || "").trim() || None,
+    }};
+    return snip;
+  }}
+
 
 
 
