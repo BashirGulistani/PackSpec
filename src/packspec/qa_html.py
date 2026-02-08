@@ -194,6 +194,58 @@ def write_interactive_qa_html(
     border-radius: 12px;
     padding: 10px 12px;
   }}
+  summary {{
+    cursor:pointer;
+    color: #ddd;
+    font-weight: 600;
+  }}
+  .mono {{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; }}
+  .small {{ font-size: 12px; color: var(--muted); }}
+  .kvs {{
+    display:grid;
+    grid-template-columns: 140px 1fr;
+    gap: 6px 12px;
+    margin-top: 8px;
+  }}
+  .kvs div:nth-child(odd) {{ color: var(--muted); }}
+  .warn {{
+    border: 1px solid rgba(255, 193, 7, .25);
+    background: rgba(255, 193, 7, .06);
+  }}
+
+  .hl {{
+    padding: 1px 3px;
+    border-radius: 6px;
+    border: 1px solid transparent;
+  }}
+  .hl-dims {{
+    background: var(--hl-dims-bg);
+    border-color: var(--hl-dims-br);
+  }}
+  .hl-weight {{
+    background: var(--hl-weight-bg);
+    border-color: var(--hl-weight-br);
+  }}
+  .hl-qty {{
+    background: var(--hl-qty-bg);
+    border-color: var(--hl-qty-br);
+  }}
+
+  .panelGrid {{
+    margin-top: 14px;
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 12px;
+    align-items: start;
+  }}
+  @media(max-width: 1100px) {{
+    .panelGrid {{ grid-template-columns: 1fr; }}
+  }}
+  .panelTitle {{
+    font-size: 14px;
+    margin: 0 0 8px;
+    color: #ddd;
+  }}
 
 
 
