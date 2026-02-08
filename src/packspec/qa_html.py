@@ -14,6 +14,19 @@ def _h(x: Any) -> str:
 
 
 
+def _pyre_to_js_literal(rx: re.Pattern) -> str:
+    """
+    Convert a Python compiled regex to a "best effort" JS regex literal string.
+    We keep it simple: pattern + 'i' flag if IGNORECASE. JS does not support all
+    Python features, but our patterns are simple enough.
+    """
+    pat = rx.pattern.replace("\\", "\\\\").replace("/", "\\/")
+    flags = "i" if (rx.flags & re.IGNORECASE) else ""
+    return f"/{pat}/{flags}"
+
+
+
+
 
 
 
