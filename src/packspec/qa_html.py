@@ -246,6 +246,59 @@ def write_interactive_qa_html(
     margin: 0 0 8px;
     color: #ddd;
   }}
+  .kvRow {{
+    display:grid;
+    grid-template-columns: 160px 1fr;
+    gap: 10px;
+    align-items:center;
+    margin-bottom: 10px;
+  }}
+  .kvRow .small {{
+    margin-top: 4px;
+  }}
+  .select {{
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: rgba(255,255,255,.03);
+    color: var(--text);
+    outline: none;
+  }}
+  .outBox {{
+    background: rgba(255,255,255,.03);
+    border: 1px solid rgba(255,255,255,.10);
+    border-radius: 12px;
+    padding: 10px 12px;
+    overflow:auto;
+  }}
+</style>
+</head>
+<body>
+  <div class="top">
+    <div>
+      <h1>{_h(title)}</h1>
+      <div class="muted">Interactive QA table (search, sort, filter, drill-down, highlighting, rule authoring).</div>
+    </div>
+    <div class="row">
+      <span class="chip" id="statRows">rows: 0</span>
+      <span class="chip" id="statLow">low-confidence: 0</span>
+      <span class="chip" id="statAvg">avg: 0.000</span>
+    </div>
+  </div>
+
+  <div class="card controls">
+    <div>
+      <label>Search (supplier, raw text, notes, rule)</label>
+      <input id="q" type="text" placeholder="e.g. carton 24, polybag, ACME..." />
+    </div>
+
+    <div>
+      <label>Confidence threshold: <span class="mono" id="thrVal">{default_low_threshold:.2f}</span></label>
+      <input id="thr" type="range" min="0" max="1" step="0.01" value="{default_low_threshold:.2f}" />
+      <div class="small">Rows below this are considered “low confidence”.</div>
+    </div>
+
 
 
 
