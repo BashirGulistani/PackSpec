@@ -693,6 +693,60 @@ def write_interactive_qa_html(
 
     const lines = [];
     lines.push(header.join(","));
+    for (const r of low) {{
+      const dims = dimsToString(r.dims);
+      const wt = weightToString(r);
+      const row = [
+        r.supplier || "",
+        r.confidence.toFixed(3),
+        r.case_pack_qty ?? "",
+        r.inner_pack_qty ?? "",
+        dims,
+        wt,
+        r.packaging_type || "",
+        r.rule_applied || "",
+        r.notes || "",
+        r.raw || ""
+      ].map(toCsvValue);
+      lines.push(row.join(","));
+    }}
+
+    const csv = lines.join("\\n");
+    const blob = new Blob([csv], {{ type: "text/csv;charset=utf-8" }});
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `packspec_low_confidence_thr_${{thr.toFixed(2)}}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  }}
+
+  function seedBuilderDefaults() {{
+    elRxCasePack.value = DEFAULT_RX.casePack.toString();
+    elRxInnerPack.value = DEFAULT_RX.innerPack.toString();
+    elRxDims.value = DEFAULT_RX.dims.toString();
+    elRxWeight.value = DEFAULT_RX.weight.toString();
+
+    elRbName.value = "supplier-packaging-overrides";
+    elRbSupplier.value = "";
+  }}
+
+  function populateRowSelector() {{
+    elSelectedRow.innerHTML = "";
+    DATA.forEach((r, idx) => {{
+      const opt = document.createElement("option");
+      const sup = r.supplier ? String(r.supplier) : "(no supplier)";
+      const conf = r.confidence.toFixed(3);
+      const preview = (r.raw || "").slice(0, 70).replace(/\\s+/g, " ");
+      opt.value = String(idx);
+      opt.textContent = `#${{idx}} | conf=${{conf}} | ${{sup}} | ${{preview}}`;
+      elSelectedRow.appendChild(opt);
+    }});
+  }}
+
 
 
 
