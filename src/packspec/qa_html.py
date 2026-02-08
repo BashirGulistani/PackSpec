@@ -794,6 +794,56 @@ def write_interactive_qa_html(
     }};
     return snip;
   }}
+  function sanitizeSnippetForOutput(obj) {{
+    const out = {{}};
+    for (const [k,v] of Object.entries(obj)) {{
+      if (v === null || v === undefined) continue;
+      if (typeof v === "string" && v.toLowerCase() === "none") continue;
+      if (k === "supplier" && (v === "None" || v === "")) continue;
+      out[k] = v;
+    }}
+    if (out.supplier === "None") delete out.supplier;
+    return out;
+  }}
+
+  function toYaml(rulepack) {{
+    const lines = [];
+    lines.push("rulepacks:");
+    lines.push("  - name: " + JSON.stringify(rulepack.name));
+    if (rulepack.supplier) lines.push("    supplier: " + JSON.stringify(rulepack.supplier));
+    lines.push("    preprocess: []");
+    if (rulepack.case_pack_regex) lines.push("    case_pack_regex: " + JSON.stringify(rulepack.case_pack_regex));
+    if (rulepack.inner_pack_regex) lines.push("    inner_pack_regex: " + JSON.stringify(rulepack.inner_pack_regex));
+    if (rulepack.dims_regex) lines.push("    dims_regex: " + JSON.stringify(rulepack.dims_regex));
+    if (rulepack.weight_regex) lines.push("    weight_regex: " + JSON.stringify(rulepack.weight_regex));
+    return lines.join("\\n") + "\\n";
+  }}
+
+  async function copyText(t, btnEl) {{
+    try {{
+      await navigator.clipboard.writeText(t);
+      const old = btnEl.textContent;
+      btnEl.textContent = "Copied!";
+      setTimeout(() => btnEl.textContent = old, 900);
+    }} catch (e) {{
+      alert("Clipboard copy failed (browser permissions).");
+    }}
+  }}
+
+  headers.forEach(th => {{
+    th.addEventListener("click", () => {{
+      const key = th.dataset.key;
+      if (!key) return;
+      if (sortKey === key) {{
+        sortDir = (sortDir === "asc") ? "desc" : "asc";
+      }} else {{
+        sortKey = key;
+        sortDir = (key === "confidence") ? "desc" : "asc";
+      }}
+      render();
+    }});
+  }});
+
 
 
 
