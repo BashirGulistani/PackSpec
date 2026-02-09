@@ -7,6 +7,7 @@ from .rules import load_rulepacks, pick_rulepack
 from .enrich import enrich
 from .validate import validate_and_score
 from .qa import build_review_queue, QAConfig
+from .qa_html import write_interactive_qa_html
 
 
 
@@ -90,6 +91,19 @@ def normalize_csv_pipeline(
     high = sum(1 for c in confs if c >= 0.7)
     low = sum(1 for c in confs if c <= (qa_cfg.low_conf_threshold if qa_cfg else 0.45))
 
+
+    qa_html_path = str(outd / "qa_report.html")
+    write_interactive_qa_html(
+        qa_html_path,
+        rows=out_rows,
+        text_col=text_col,
+        supplier_col=supplier_col,
+        title="PackSpec QA Report",
+        default_low_threshold=(qa_cfg.low_conf_threshold if qa_cfg else 0.45),
+        max_rows=5000,
+    )
+
+
     return {
         "rows": len(out_rows),
         "avg_confidence": round(avg, 3),
@@ -100,5 +114,7 @@ def normalize_csv_pipeline(
         "out_csv": out_csv,
         "review_queue_csv": review_path,
         "sample_csv": sample_path,
+        "qa_report_html": qa_html_path,
+
     }
 
